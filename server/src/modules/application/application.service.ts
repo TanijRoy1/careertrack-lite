@@ -49,7 +49,6 @@ const updateApplication = async (
   applicationId: string,
   payload: any,
 ) => {
-  // Check ownership first
   const existingApplication = await prisma.application.findFirst({
     where: {
       id: applicationId,
@@ -81,9 +80,31 @@ const updateApplication = async (
   return updatedApplication;
 };
 
+const deleteApplication = async (userId: string, applicationId: string) => {
+  const existingApplication = await prisma.application.findFirst({
+    where: {
+      id: applicationId,
+      userId,
+    },
+  });
+
+  if (!existingApplication) {
+    throw new Error("Application not found");
+  }
+
+  const deletedApplication = await prisma.application.delete({
+    where: {
+      id: applicationId,
+    },
+  });
+
+  return deletedApplication;
+};
+
 export const ApplicationService = {
   createApplication,
   getApplications,
   getApplicationById,
   updateApplication,
+  deleteApplication,
 };

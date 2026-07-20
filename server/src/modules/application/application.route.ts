@@ -8,6 +8,7 @@ router.post("/", authMiddleware, ApplicationController.createApplication);
 router.get("/", authMiddleware, ApplicationController.getApplications);
 router.get("/:id", authMiddleware, ApplicationController.getApplicationById);
 router.patch("/:id", authMiddleware, ApplicationController.updateApplication);
+router.delete("/:id", authMiddleware, ApplicationController.deleteApplication);
 
 // router.get("/", (_req, res) => {
 //   res.send("Application route works");

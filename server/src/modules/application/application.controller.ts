@@ -92,9 +92,33 @@ const updateApplication = async (req: AuthRequest, res: Response) => {
   }
 };
 
+const deleteApplication = async (req: AuthRequest, res: Response) => {
+  try {
+    const result = await ApplicationService.deleteApplication(
+      req.user!.id,
+      req.params.id as string,
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Application deleted successfully.",
+      data: result,
+    });
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Something went wrong";
+
+    res.status(404).json({
+      success: false,
+      message,
+    });
+  }
+};
+
 export const ApplicationController = {
   createApplication,
   getApplications,
   getApplicationById,
   updateApplication,
+  deleteApplication,
 };
