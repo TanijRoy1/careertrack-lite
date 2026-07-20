@@ -27,7 +27,10 @@ const createApplication = async (req: AuthRequest, res: Response) => {
 
 const getApplications = async (req: AuthRequest, res: Response) => {
   try {
-    const result = await ApplicationService.getApplications(req.user!.id);
+    const result = await ApplicationService.getApplications(
+      req.user!.id,
+      req.query,
+    );
 
     res.status(200).json({
       success: true,

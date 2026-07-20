@@ -17,13 +17,48 @@ const createApplication = async (userId: string, payload: any) => {
   return application;
 };
 
-const getApplications = async (userId: string) => {
+const getApplications = async (
+  userId: string,
+  query: {
+    search?: string;
+    status?: string;
+    source?: string;
+    sort?: string;
+  },
+) => {
+  const { search, status, source, sort } = query;
+
   const applications = await prisma.application.findMany({
     where: {
       userId,
+
+      ...(search && {
+        OR: [
+          {
+            companyName: {
+              contains: search,
+              mode: "insensitive",
+            },
+          },
+          {
+            jobTitle: {
+              contains: search,
+              mode: "insensitive",
+            },
+          },
+        ],
+      }),
+
+      ...(status && {
+        status: status as any,
+      }),
+
+      ...(source && {
+        source: source as any,
+      }),
     },
     orderBy: {
-      createdAt: "desc",
+      createdAt: sort === "oldest" ? "asc" : "desc",
     },
   });
 
