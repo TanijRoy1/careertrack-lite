@@ -17,6 +17,20 @@ const createApplication = async (userId: string, payload: any) => {
   return application;
 };
 
+const getApplications = async (userId: string) => {
+  const applications = await prisma.application.findMany({
+    where: {
+      userId,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
+  return applications;
+};
+
 export const ApplicationService = {
   createApplication,
+  getApplications,
 };
