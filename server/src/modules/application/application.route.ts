@@ -6,6 +6,7 @@ const router = Router();
 
 router.post("/", authMiddleware, ApplicationController.createApplication);
 router.get("/", authMiddleware, ApplicationController.getApplications);
+router.get("/:id", authMiddleware, ApplicationController.getApplicationById);
 
 
 

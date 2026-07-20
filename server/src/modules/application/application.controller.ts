@@ -45,7 +45,31 @@ const getApplications = async (req: AuthRequest, res: Response) => {
   }
 };
 
+const getApplicationById = async (req: AuthRequest, res: Response) => {
+  try {
+    const result = await ApplicationService.getApplicationById(
+      req.user!.id,
+      req.params.id as string,
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Application retrived successfully.",
+      data: result,
+    });
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Something went wrong";
+
+    res.status(404).json({
+      success: false,
+      message,
+    });
+  }
+};
+
 export const ApplicationController = {
   createApplication,
   getApplications,
+  getApplicationById
 };

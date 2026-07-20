@@ -30,7 +30,22 @@ const getApplications = async (userId: string) => {
   return applications;
 };
 
+const getApplicationById = async (userId: string, applicationId: string) => {
+  const application = await prisma.application.findFirst({
+    where: {
+      id: applicationId,
+      userId: userId,
+    },
+  });
+  if (!application) {
+    throw new Error("Application not found");
+  }
+
+  return application;
+};
+
 export const ApplicationService = {
   createApplication,
   getApplications,
+  getApplicationById,
 };
