@@ -1,7 +1,5 @@
 import { useState, type ReactNode } from "react";
-
 import AuthContext from "./AuthContext";
-
 import type { User } from "../types/auth.types";
 
 interface AuthProviderProps {
@@ -23,25 +21,17 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const logout = () => {
     localStorage.removeItem("token");
-
     localStorage.removeItem("user");
-
     setToken(null);
-
     setUser(null);
   };
 
   const authInfo = {
     user,
-
     token,
-
     loading,
-
     setUser,
-
     setToken,
-
     logout,
   };
 
