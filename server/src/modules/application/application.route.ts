@@ -1,0 +1,12 @@
+import { Router } from "express";
+import authMiddleware from "../../middleware/auth.middleware";
+import { ApplicationController } from "./application.controller";
+
+const router = Router();
+
+router.post("/", authMiddleware, ApplicationController.createApplication);
+router.get("/", (_req, res) => {
+  res.send("Application route works");
+});
+
+export const ApplicationRoutes = router;
