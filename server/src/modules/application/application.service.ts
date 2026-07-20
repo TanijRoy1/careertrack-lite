@@ -1,6 +1,13 @@
 import { prisma } from "../../config/db";
+import {
+  ApplicationQuery,
+  CreateApplicationPayload,
+} from "../../types/application.types";
 
-const createApplication = async (userId: string, payload: any) => {
+const createApplication = async (
+  userId: string,
+  payload: CreateApplicationPayload,
+) => {
   const application = await prisma.application.create({
     data: {
       companyName: payload.companyName,
@@ -17,15 +24,7 @@ const createApplication = async (userId: string, payload: any) => {
   return application;
 };
 
-const getApplications = async (
-  userId: string,
-  query: {
-    search?: string;
-    status?: string;
-    source?: string;
-    sort?: string;
-  },
-) => {
+const getApplications = async (userId: string, query: ApplicationQuery) => {
   const { search, status, source, sort } = query;
 
   const applications = await prisma.application.findMany({
@@ -82,7 +81,7 @@ const getApplicationById = async (userId: string, applicationId: string) => {
 const updateApplication = async (
   userId: string,
   applicationId: string,
-  payload: any,
+  payload: CreateApplicationPayload,
 ) => {
   const existingApplication = await prisma.application.findFirst({
     where: {
