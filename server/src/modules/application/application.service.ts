@@ -44,8 +44,46 @@ const getApplicationById = async (userId: string, applicationId: string) => {
   return application;
 };
 
+const updateApplication = async (
+  userId: string,
+  applicationId: string,
+  payload: any,
+) => {
+  // Check ownership first
+  const existingApplication = await prisma.application.findFirst({
+    where: {
+      id: applicationId,
+      userId,
+    },
+  });
+
+  if (!existingApplication) {
+    throw new Error("Application not found");
+  }
+
+  const updatedApplication = await prisma.application.update({
+    where: {
+      id: applicationId,
+    },
+    data: {
+      companyName: payload.companyName,
+      jobTitle: payload.jobTitle,
+      jobUrl: payload.jobUrl,
+      source: payload.source,
+      status: payload.status,
+      applicationDate: payload.applicationDate
+        ? new Date(payload.applicationDate)
+        : undefined,
+      notes: payload.notes,
+    },
+  });
+
+  return updatedApplication;
+};
+
 export const ApplicationService = {
   createApplication,
   getApplications,
   getApplicationById,
+  updateApplication,
 };

@@ -68,8 +68,33 @@ const getApplicationById = async (req: AuthRequest, res: Response) => {
   }
 };
 
+const updateApplication = async (req: AuthRequest, res: Response) => {
+  try {
+    const result = await ApplicationService.updateApplication(
+      req.user!.id,
+      req.params.id as string,
+      req.body,
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Application updated successfully.",
+      data: result,
+    });
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Something went wrong";
+
+    res.status(404).json({
+      success: false,
+      message,
+    });
+  }
+};
+
 export const ApplicationController = {
   createApplication,
   getApplications,
-  getApplicationById
+  getApplicationById,
+  updateApplication,
 };
