@@ -40,19 +40,19 @@ const router = createBrowserRouter([
         element: <DashboardLayout />,
         children: [
           {
-            path: "/dashboard",
+            path: "dashboard",
             Component: DashboardHome,
           },
           {
-            path: "/applications",
+            path: "applications",
             Component: Applications,
           },
           {
-            path: "/applications/new",
+            path: "applications/new",
             Component: AddApplication,
           },
           {
-            path: "/applications/:id/edit",
+            path: "applications/:id/edit",
             Component: EditApplication,
           },
         ],

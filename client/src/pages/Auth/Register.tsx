@@ -45,8 +45,8 @@ const Register = () => {
     <div className="flex min-h-screen bg-slate-50 text-slate-900">
       {/* Left Banner Section (Hidden on small screens) */}
       <div className="hidden w-1/2 flex-col justify-between bg-linear-to-br from-indigo-600 via-indigo-700 to-blue-800 p-12 text-white lg:flex">
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 backdrop-blur-md">
+        <Link to={"/"} className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 backdrop-blur-md border border-white/20 shadow-sm">
             <svg
               className="h-6 w-6 text-white"
               fill="none"
@@ -62,9 +62,9 @@ const Register = () => {
             </svg>
           </div>
           <span className="text-xl font-bold tracking-tight">
-            CareerTrack Lite
+            CareerTrack <span className="text-sm text-indigo-200">Lite</span>
           </span>
-        </div>
+        </Link>
 
         <div className="max-w-md space-y-4">
           <h1 className="text-4xl font-extrabold leading-tight">

@@ -1,4 +1,4 @@
-import { NavLink } from "react-router";
+import { Link, NavLink } from "react-router";
 
 interface DashboardSidebarProps {
   sidebarOpen: boolean;
@@ -88,6 +88,7 @@ const DashboardSidebar = ({
         {/* Brand Header */}
         <div className="flex h-16 items-center justify-between border-b border-slate-100 px-6">
           <div className="flex items-center gap-2.5">
+            <Link to={"/"} className="flex items-center gap-2.5">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-600 text-white shadow-md shadow-indigo-100">
               <svg
                 className="h-5 w-5"
@@ -109,6 +110,7 @@ const DashboardSidebar = ({
                 Lite
               </span>
             </span>
+            </Link>
           </div>
 
           {/* Close button for mobile */}

@@ -66,7 +66,7 @@ const Login = () => {
       {/* Left Branding/Feature Section (Hidden on small screens) */}
       <div className="hidden w-1/2 flex-col justify-between bg-gradient-to-br from-indigo-600 via-indigo-700 to-blue-800 p-12 text-white lg:flex">
         {/* Logo */}
-        <div className="flex items-center gap-3">
+        <Link to={"/"} className="flex items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 backdrop-blur-md border border-white/20 shadow-sm">
             <svg
               className="h-6 w-6 text-white"
@@ -83,9 +83,9 @@ const Login = () => {
             </svg>
           </div>
           <span className="text-xl font-bold tracking-tight">
-            CareerTrack <span className="font-light text-indigo-200">Lite</span>
+            CareerTrack <span className="text-sm text-indigo-200">Lite</span>
           </span>
-        </div>
+        </Link>
 
         {/* Hero Info */}
         <div className="max-w-md space-y-6">
