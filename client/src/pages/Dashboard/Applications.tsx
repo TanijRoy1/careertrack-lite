@@ -38,6 +38,8 @@ const Applications = () => {
   const [sortOrder, setSortOrder] = useState<"NEWEST" | "OLDEST">("NEWEST");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [totalApplications, setTotalApplications] = useState(0);
+  const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
 
   // Fetch Applications
   const fetchApplications = useCallback(async () => {
@@ -56,6 +58,8 @@ const Applications = () => {
       setApplications(response.data.data);
 
       setTotalPages(response.data.pagination.totalPages);
+      setTotalApplications(response.data.pagination.total);
+      setHasLoadedOnce(true);
     } catch (error) {
       if (error instanceof AxiosError) {
         const axiosError = error as AxiosError<ApiErrorResponse>;
@@ -196,7 +200,7 @@ const Applications = () => {
       )}
 
       {/* Phase 11: Filter & Control Toolbar */}
-      {!loading && applications.length > 0 && (
+      {hasLoadedOnce && (
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 items-end bg-slate-50/50 p-4 rounded-2xl border border-slate-200">
           <Input
             placeholder="Search company or title..."
@@ -244,26 +248,18 @@ const Applications = () => {
               setCurrentPage(1);
             }}
             options={[
-              {
-                label: "All Sources",
-                value: "ALL",
-              },
-              {
-                label: "LinkedIn",
-                value: "LINKEDIN",
-              },
-              {
-                label: "Company Website",
-                value: "COMPANY_WEBSITE",
-              },
-              {
-                label: "Referral",
-                value: "REFERRAL",
-              },
-              {
-                label: "Other",
-                value: "OTHER",
-              },
+              { label: "All Sources", value: "ALL" },
+              { label: "LinkedIn", value: "LINKEDIN" },
+              { label: "Company Website", value: "COMPANY" },
+              { label: "Referral", value: "REFERRAL" },
+              { label: "BDJobs", value: "BDJOBS" },
+              { label: "Indeed", value: "INDEED" },
+              { label: "Wellfound", value: "WELLFOUND" },
+              { label: "Facebook", value: "FACEBOOK" },
+              { label: "Discord", value: "DISCORD" },
+              { label: "Internshala", value: "INTERNSHALA" },
+              { label: "Unstop", value: "UNSTOP" },
+              { label: "Other", value: "OTHER" },
             ]}
           />
 
@@ -284,14 +280,16 @@ const Applications = () => {
       {/* Main Content Area */}
       {loading ? (
         renderSkeletons()
-      ) : applications.length === 0 ? (
+      ) : totalApplications === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-white p-12 text-center shadow-sm">
           <h3 className="text-lg font-bold text-slate-800">
             No applications yet
           </h3>
+
           <p className="mt-1 text-sm text-slate-500 max-w-sm">
             Start tracking your job search by adding your first application.
           </p>
+
           <Link to="/applications/new" className="mt-6">
             <Button>+ Add First Application</Button>
           </Link>
@@ -309,7 +307,7 @@ const Applications = () => {
             deletingId={deletingId}
           />
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:hidden">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:hidden">
             {applications.map((app) => (
               <ApplicationCard
                 key={app.id}
@@ -321,7 +319,6 @@ const Applications = () => {
             ))}
           </div>
 
-          {/* Pagination Controls */}
           {totalPages > 1 && (
             <div className="flex items-center justify-between border-t border-slate-200 pt-4">
               <span className="text-sm text-slate-500">
@@ -334,6 +331,7 @@ const Applications = () => {
                   {totalPages}
                 </span>
               </span>
+
               <div className="flex gap-2">
                 <Button
                   variant="outline"
@@ -345,6 +343,7 @@ const Applications = () => {
                 >
                   Previous
                 </Button>
+
                 <Button
                   variant="outline"
                   size="sm"
