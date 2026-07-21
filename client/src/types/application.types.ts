@@ -51,3 +51,25 @@ export interface CreateApplicationPayload {
   applicationDate: string;
   notes?: string;
 }
+
+export const APPLICATION_STATUS = [
+  "SAVED",
+  "APPLIED",
+  "ASSESSMENT",
+  "INTERVIEW",
+  "REJECTED",
+  "OFFER",
+] as const;
+
+export const APPLICATION_SOURCE = [
+  "LINKEDIN",
+  "BDJOBS",
+  "INDEED",
+  "WELLFOUND",
+  "FACEBOOK",
+  "DISCORD",
+  "INTERNSHALA",
+  "UNSTOP",
+  "REFERRAL",
+  "OTHER",
+] as const;
