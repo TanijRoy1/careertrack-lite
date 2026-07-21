@@ -5,6 +5,7 @@ import authMiddleware from "./middleware/auth.middleware";
 import { AuthRequest } from "./types/auth.types";
 import { ApplicationRoutes } from "./modules/application/application.route";
 import { DashboardRoutes } from "./modules/dashboard/dashboard.route";
+import { AIRoutes } from "./modules/ai/ai.route";
 
 const app = express();
 
@@ -14,6 +15,7 @@ app.use(express.json());
 app.use("/api/auth", AuthRoutes);
 app.use("/api/applications", ApplicationRoutes);
 app.use("/api/dashboard", DashboardRoutes);
+app.use("/api/ai", AIRoutes);
 
 
 
