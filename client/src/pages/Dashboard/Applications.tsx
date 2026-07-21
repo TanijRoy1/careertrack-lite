@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import { Link } from "react-router";
 import { AxiosError } from "axios";
 
@@ -16,35 +16,82 @@ const Applications = () => {
 
   const [applications, setApplications] = useState<Application[]>([]);
   const [loading, setLoading] = useState(true);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const [apiError, setApiError] = useState("");
+
+  // Delete Modal State
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [selectedAppToDelete, setSelectedAppToDelete] = useState<{
+    id: string;
+    companyName: string;
+  } | null>(null);
 
   // Filter States
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("ALL");
 
-  useEffect(() => {
-    const fetchApplications = async () => {
-      try {
-        const response = await ApplicationService.getApplications(axiosSecure);
-        setApplications(response.data);
-      } catch (error) {
-        if (error instanceof AxiosError) {
-          const axiosError = error as AxiosError<ApiErrorResponse>;
-          setApiError(
-            axiosError.response?.data.message ?? "Failed to load applications.",
-          );
-        } else {
-          setApiError("An unexpected error occurred while fetching data.");
-        }
-      } finally {
-        setLoading(false);
+  // Fetch Applications
+  const fetchApplications = useCallback(async () => {
+    try {
+      setLoading(true);
+      const response = await ApplicationService.getApplications(axiosSecure);
+      setApplications(response.data);
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        const axiosError = error as AxiosError<ApiErrorResponse>;
+        setApiError(
+          axiosError.response?.data.message ?? "Failed to load applications.",
+        );
+      } else {
+        setApiError("An unexpected error occurred while fetching data.");
       }
-    };
-
-    fetchApplications();
+    } finally {
+      setLoading(false);
+    }
   }, [axiosSecure]);
 
-  // Color helper for application statuses
+  useEffect(() => {
+    const loadApplications = async () => {
+      await fetchApplications();
+    };
+
+    loadApplications();
+  }, [fetchApplications]);
+  // Open confirmation modal
+  const confirmDelete = (id: string, companyName: string) => {
+    setSelectedAppToDelete({ id, companyName });
+    setDeleteModalOpen(true);
+  };
+
+  // Perform actual deletion
+  const handleDelete = async () => {
+    if (!selectedAppToDelete) return;
+
+    const { id } = selectedAppToDelete;
+
+    try {
+      setDeletingId(id);
+      await ApplicationService.deleteApplication(axiosSecure, id);
+
+      // Close modal and refresh list
+      setDeleteModalOpen(false);
+      setSelectedAppToDelete(null);
+      await fetchApplications();
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        const axiosError = error as AxiosError<ApiErrorResponse>;
+        setApiError(
+          axiosError.response?.data.message ?? "Failed to delete application.",
+        );
+      } else {
+        setApiError("Delete failed. Please try again.");
+      }
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
+  // Status Badge Colors Helper
   const getStatusBadge = (status: string) => {
     const normalized = status.toUpperCase();
     switch (normalized) {
@@ -127,21 +174,29 @@ const Applications = () => {
 
       {/* API Error Banner */}
       {apiError && (
-        <div className="flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 p-4 text-red-800">
-          <svg
-            className="h-5 w-5 text-red-500 shrink-0 mt-0.5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
+        <div className="flex items-start justify-between gap-3 rounded-xl border border-red-200 bg-red-50 p-4 text-red-800">
+          <div className="flex items-start gap-3">
+            <svg
+              className="h-5 w-5 text-red-500 shrink-0 mt-0.5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            <p className="text-sm font-medium">{apiError}</p>
+          </div>
+          <button
+            onClick={() => setApiError("")}
+            className="text-red-500 hover:text-red-700 font-bold text-sm"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
-          <p className="text-sm font-medium">{apiError}</p>
+            ✕
+          </button>
         </div>
       )}
 
@@ -295,6 +350,7 @@ const Applications = () => {
                     </td>
                     <td className="px-6 py-4 text-right">
                       <div className="flex items-center justify-end gap-2">
+                        {/* Edit Link */}
                         <Link
                           to={`/applications/${app.id}/edit`}
                           className="rounded-lg p-1.5 text-slate-500 hover:bg-slate-100 hover:text-indigo-600 transition"
@@ -314,6 +370,50 @@ const Applications = () => {
                             />
                           </svg>
                         </Link>
+
+                        {/* Delete Button */}
+                        <button
+                          onClick={() => confirmDelete(app.id, app.companyName)}
+                          disabled={deletingId === app.id}
+                          className="rounded-lg p-1.5 cursor-pointer text-slate-500 hover:bg-rose-50 hover:text-rose-600 transition disabled:opacity-50"
+                          title="Delete Application"
+                        >
+                          {deletingId === app.id ? (
+                            <svg
+                              className="h-4 w-4 animate-spin text-rose-600"
+                              viewBox="0 0 24 24"
+                            >
+                              <circle
+                                className="opacity-25"
+                                cx="12"
+                                cy="12"
+                                r="10"
+                                stroke="currentColor"
+                                strokeWidth="4"
+                                fill="none"
+                              />
+                              <path
+                                className="opacity-75"
+                                fill="currentColor"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                              />
+                            </svg>
+                          ) : (
+                            <svg
+                              className="h-4 w-4"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                              />
+                            </svg>
+                          )}
+                        </button>
                       </div>
                     </td>
                   </tr>
@@ -322,7 +422,7 @@ const Applications = () => {
             </table>
           </div>
 
-          {/* Mobile & Tablet Cards View */}
+          {/* Mobile Cards View */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:hidden">
             {filteredApplications.map((app) => (
               <div
@@ -359,27 +459,78 @@ const Applications = () => {
                 </div>
 
                 <div className="flex items-center justify-end gap-2 pt-2">
-                  {app.jobUrl && (
-                    <a
-                      href={app.jobUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-50"
-                    >
-                      View Link
-                    </a>
-                  )}
                   <Link
                     to={`/applications/${app.id}/edit`}
                     className="rounded-lg bg-indigo-50 px-3 py-1.5 text-xs font-semibold text-indigo-600 hover:bg-indigo-100 transition"
                   >
-                    Edit Details
+                    Edit
                   </Link>
+                  <button
+                    onClick={() => confirmDelete(app.id, app.companyName)}
+                    disabled={deletingId === app.id}
+                    className="rounded-lg bg-rose-50 px-3 py-1.5 text-xs font-semibold text-rose-600 hover:bg-rose-100 transition"
+                  >
+                    {deletingId === app.id ? "Deleting..." : "Delete"}
+                  </button>
                 </div>
               </div>
             ))}
           </div>
         </>
+      )}
+
+      {/* Styled Confirmation Modal */}
+      {deleteModalOpen && selectedAppToDelete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl space-y-4">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-rose-100 text-rose-600">
+              <svg
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                />
+              </svg>
+            </div>
+
+            <div>
+              <h3 className="text-lg font-bold text-slate-900">
+                Delete Application
+              </h3>
+              <p className="mt-1 text-sm text-slate-600">
+                Are you sure you want to delete your application for{" "}
+                <span className="font-semibold text-slate-800">
+                  {selectedAppToDelete.companyName}
+                </span>
+                ? This action cannot be undone.
+              </p>
+            </div>
+
+            <div className="flex items-center justify-end gap-3 pt-2">
+              <button
+                type="button"
+                onClick={() => setDeleteModalOpen(false)}
+                className="rounded-xl px-4 py-2 cursor-pointer text-sm font-semibold text-slate-600 hover:bg-slate-100 transition"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleDelete}
+                disabled={deletingId !== null}
+                className="rounded-xl bg-rose-600 px-4 py-2 cursor-pointer text-sm font-semibold text-white shadow-sm hover:bg-rose-700 transition disabled:opacity-50"
+              >
+                {deletingId ? "Deleting..." : "Delete Application"}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
