@@ -1,6 +1,7 @@
 import { Response } from "express";
 import { AuthRequest } from "../../types/auth.types";
 import { ApplicationService } from "./application.service";
+import { ApplicationQuery } from "../../types/application.types";
 
 const createApplication = async (req: AuthRequest, res: Response) => {
   try {
@@ -29,7 +30,7 @@ const getApplications = async (req: AuthRequest, res: Response) => {
   try {
     const result = await ApplicationService.getApplications(
       req.user!.id,
-      req.query,
+      req.query as ApplicationQuery
     );
 
     res.status(200).json({

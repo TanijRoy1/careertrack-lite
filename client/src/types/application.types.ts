@@ -46,8 +46,8 @@ export interface CreateApplicationPayload {
   companyName: string;
   jobTitle: string;
   jobUrl?: string;
-  source: Application["source"];
-  status: Application["status"];
+  source: string;
+  status: string;
   applicationDate: string;
   notes?: string;
 }
@@ -73,3 +73,12 @@ export const APPLICATION_SOURCE = [
   "REFERRAL",
   "OTHER",
 ] as const;
+
+export interface ApplicationQueryParams {
+  search?: string;
+  status?: string;
+  source?: string;
+  sort?: "newest" | "oldest";
+  page?: number;
+  limit?: number;
+}

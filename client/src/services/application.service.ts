@@ -1,5 +1,8 @@
 import type { AxiosInstance } from "axios";
-import type { CreateApplicationPayload } from "../types/application.types";
+import type {
+  ApplicationQueryParams,
+  CreateApplicationPayload,
+} from "../types/application.types";
 
 const createApplication = async (
   axiosSecure: AxiosInstance,
@@ -10,8 +13,13 @@ const createApplication = async (
   return response.data;
 };
 
-const getApplications = async (axiosSecure: AxiosInstance) => {
-  const response = await axiosSecure.get("/applications");
+const getApplications = async (
+  axiosSecure: AxiosInstance,
+  params: ApplicationQueryParams,
+) => {
+  const response = await axiosSecure.get("/applications", {
+    params,
+  });
 
   return response.data;
 };

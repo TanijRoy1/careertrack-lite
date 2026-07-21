@@ -61,5 +61,9 @@ export interface ApplicationQuery {
   search?: string;
   status?: string;
   source?: string;
+
   sort?: "newest" | "oldest";
+
+  page?: string;
+  limit?: string;
 }

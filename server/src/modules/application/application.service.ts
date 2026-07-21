@@ -25,7 +25,17 @@ const createApplication = async (
 };
 
 const getApplications = async (userId: string, query: ApplicationQuery) => {
-  const { search, status, source, sort } = query;
+  const {
+    search,
+    status,
+    source,
+    sort = "newest",
+    page = "1",
+    limit = "5",
+  } = query;
+  const skip = (Number(page) - 1) * Number(limit);
+
+  const take = Number(limit);
 
   const applications = await prisma.application.findMany({
     where: {
@@ -55,13 +65,58 @@ const getApplications = async (userId: string, query: ApplicationQuery) => {
       ...(source && {
         source: source as any,
       }),
+      ...(source && {
+        source,
+      }),
     },
     orderBy: {
       createdAt: sort === "oldest" ? "asc" : "desc",
     },
+    skip,
+
+    take,
   });
 
-  return applications;
+  const total = await prisma.application.count({
+    where: {
+      userId,
+
+      ...(search && {
+        OR: [
+          {
+            companyName: {
+              contains: search,
+              mode: "insensitive",
+            },
+          },
+          {
+            jobTitle: {
+              contains: search,
+              mode: "insensitive",
+            },
+          },
+        ],
+      }),
+
+      ...(status && {
+        status: status as any,
+      }),
+
+      ...(source && {
+        source: source as any,
+      }),
+    },
+  });
+
+  return {
+    data: applications,
+    pagination: {
+      total,
+      page: Number(page),
+      limit: Number(limit),
+      totalPages: Math.ceil(total / Number(limit)),
+    },
+  };
 };
 
 const getApplicationById = async (userId: string, applicationId: string) => {
