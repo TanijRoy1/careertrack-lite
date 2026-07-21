@@ -7,6 +7,9 @@ import { ApplicationService } from "../../services/application.service";
 import ApplicationForm from "../../components/application/ApplicationForm";
 
 import type { CreateApplicationPayload } from "../../types/application.types";
+import AIResult from "../../components/ai/AIResult";
+import { AIService } from "../../services/ai.service";
+import type { AIAnalysis } from "../../types/ai.types";
 
 interface ApiErrorResponse {
   message: string;
@@ -18,6 +21,30 @@ const AddApplication = () => {
 
   const [loading, setLoading] = useState(false);
   const [apiError, setApiError] = useState("");
+  const [jobDescription, setJobDescription] = useState("");
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiResult, setAiResult] = useState<AIAnalysis | null>(null);
+  const [aiError, setAiError] = useState("");
+
+  const handleAnalyze = async () => {
+    if (!jobDescription.trim()) {
+      setAiError("Please paste a job description first.");
+      return;
+    }
+
+    try {
+      setAiLoading(true);
+      setAiError("");
+
+      const response = await AIService.analyzeJob(axiosSecure, jobDescription);
+
+      setAiResult(response.data);
+    } catch {
+      setAiError("Failed to analyze job description.");
+    } finally {
+      setAiLoading(false);
+    }
+  };
 
   const handleCreate = async (data: CreateApplicationPayload) => {
     try {
@@ -30,7 +57,7 @@ const AddApplication = () => {
       if (error instanceof AxiosError) {
         const axiosError = error as AxiosError<ApiErrorResponse>;
         setApiError(
-          axiosError.response?.data.message ?? "Failed to create application."
+          axiosError.response?.data.message ?? "Failed to create application.",
         );
       } else {
         setApiError("An unexpected error occurred. Please try again.");
@@ -82,7 +109,45 @@ const AddApplication = () => {
             <p className="text-sm font-medium">{apiError}</p>
           </div>
         )}
+        {/* // AI job analyzer */}
+        <div className="mb-8 rounded-xl border border-slate-200 bg-slate-50 p-5">
+          <div className="mb-4">
+            <h2 className="text-lg font-semibold">AI Job Analyzer (Bonus)</h2>
 
+            <p className="mt-1 text-sm text-slate-500">
+              Paste a job description to receive an AI-generated summary,
+              required skills, keywords, preparation topics, and interview
+              questions.
+            </p>
+          </div>
+
+          <textarea
+            rows={8}
+            value={jobDescription}
+            onChange={(e) => setJobDescription(e.target.value)}
+            placeholder="Paste the full job description here..."
+            className="w-full rounded-xl border border-slate-300 p-4 outline-none focus:border-indigo-500"
+          />
+
+          {aiError && <p className="mt-3 text-sm text-red-600">{aiError}</p>}
+
+          <div className="mt-4">
+            <button
+              type="button"
+              onClick={handleAnalyze}
+              disabled={aiLoading}
+              className="rounded-xl bg-indigo-600 px-5 py-2.5 font-medium text-white hover:bg-indigo-700 disabled:opacity-50"
+            >
+              {aiLoading ? "Analyzing..." : "Analyze with AI"}
+            </button>
+          </div>
+
+          {aiResult && (
+            <div className="mt-6">
+              <AIResult result={aiResult} />
+            </div>
+          )}
+        </div>
         <ApplicationForm onSubmit={handleCreate} loading={loading} />
       </div>
     </div>

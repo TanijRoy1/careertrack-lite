@@ -4,6 +4,6 @@ import authMiddleware from "../../middleware/auth.middleware";
 
 const router = Router();
 
-router.post("/analyze-job",  AIController.analyzeJob);
+router.post("/analyze-job", authMiddleware, AIController.analyzeJob);
 
 export const AIRoutes = router;
