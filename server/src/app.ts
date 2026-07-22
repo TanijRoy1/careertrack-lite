@@ -17,7 +17,12 @@ app.use("/api/applications", ApplicationRoutes);
 app.use("/api/dashboard", DashboardRoutes);
 app.use("/api/ai", AIRoutes);
 
-
+app.get("/", (_req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "CareerTrack Lite API is running 🚀",
+  });
+});
 
 app.get("/api/health", (_req, res) => {
   res.status(200).json({
