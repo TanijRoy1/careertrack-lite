@@ -20,7 +20,7 @@ app.use("/api/ai", AIRoutes);
 app.get("/", (_req, res) => {
   res.status(200).json({
     success: true,
-    message: "CareerTrack Lite API is running 🚀",
+    message: "CareerTrack Lite API is running.",
   });
 });
 
