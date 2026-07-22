@@ -10,6 +10,7 @@ import DashboardHome from "../pages/Dashboard/DashboardHome";
 import Applications from "../pages/Dashboard/Applications";
 import AddApplication from "../pages/Application/AddApplication";
 import EditApplication from "../pages/Application/EditApplication";
+import AIAnalyzer from "../pages/Dashboard/AIAnalyzer";
 
 const router = createBrowserRouter([
   {
@@ -54,6 +55,10 @@ const router = createBrowserRouter([
           {
             path: "applications/:id/edit",
             Component: EditApplication,
+          },
+          {
+            path: "/ai-analyzer",
+            Component: AIAnalyzer,
           },
         ],
       },

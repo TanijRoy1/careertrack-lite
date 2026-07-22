@@ -67,6 +67,26 @@ const DashboardSidebar = ({
         </svg>
       ),
     },
+    {
+      label: "AI Analyzer",
+      to: "/ai-analyzer",
+      icon: (
+        <svg
+          className="h-5 w-5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M12 2a2 2 0 012 2v1.2a6.8 6.8 0 013.8 3.8H19a2 2 0 110 4h-1.2a6.8 6.8 0 01-3.8 3.8V20a2 2 0 11-4 0v-1.2A6.8 6.8 0 016.2 15H5a2 2 0 110-4h1.2A6.8 6.8 0 0110 7.2V6a2 2 0 012-2z"
+          />
+          <circle cx="12" cy="12" r="2" fill="currentColor" />
+        </svg>
+      ),
+    },
   ];
 
   return (
