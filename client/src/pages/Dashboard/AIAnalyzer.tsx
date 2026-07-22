@@ -7,6 +7,7 @@ import AIResult from "../../components/ai/AIResult";
 import { Button } from "../../components/ui/Button";
 
 import type { AIAnalysis } from "../../types/ai.types";
+import { showError } from "../../utils/toast";
 
 interface ApiErrorResponse {
   message: string;
@@ -30,10 +31,7 @@ const AIAnalyzer = () => {
       setLoading(true);
       setApiError("");
 
-      const response = await AIService.analyzeJob(
-        axiosSecure,
-        jobDescription
-      );
+      const response = await AIService.analyzeJob(axiosSecure, jobDescription);
 
       setResult(response.data);
     } catch (error) {
@@ -42,8 +40,9 @@ const AIAnalyzer = () => {
 
         setApiError(
           axiosError.response?.data.message ??
-            "Failed to analyze job description."
+            "Failed to analyze job description.",
         );
+        showError("AI service is unavailable. Please try again.");
       } else {
         setApiError("Something went wrong.");
       }

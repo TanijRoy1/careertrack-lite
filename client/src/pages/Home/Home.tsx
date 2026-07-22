@@ -1,7 +1,34 @@
 import { Link } from "react-router";
 import useAuth from "../../hooks/useAuth";
 import { Button } from "../../components/ui/Button";
-import { HiOutlineBriefcase } from "react-icons/hi";
+import { ArrowRight, Sparkles, ShieldCheck, Zap } from "lucide-react";
+
+export const CareerTrackLogo = ({ className = "h-6 w-6" }: { className?: string }) => (
+  <svg
+    viewBox="0 0 32 32"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className={className}
+  >
+    {/* Dynamic stair-step / trendline representing career growth */}
+    <path
+      d="M4 22L12 14L18 20L28 8"
+      stroke="currentColor"
+      strokeWidth="3.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M20 8H28V16"
+      stroke="currentColor"
+      strokeWidth="3.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <circle cx="12" cy="14" r="2.5" fill="currentColor" />
+    <circle cx="18" cy="20" r="2.5" fill="currentColor" />
+  </svg>
+);
 
 const features = [
   {
@@ -105,7 +132,7 @@ const Home = () => {
           {/* Logo */}
           <div className="flex items-center gap-2.5">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-600 text-white shadow-md shadow-indigo-500/20">
-              <HiOutlineBriefcase className="h-5 w-5 stroke-[2.2]" />
+              <CareerTrackLogo></CareerTrackLogo>
             </div>
             <span className="text-lg font-bold tracking-tight text-slate-900">
               CareerTrack{" "}
@@ -122,7 +149,7 @@ const Home = () => {
                     size="sm"
                     className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium shadow-sm"
                   >
-                    Go to Dashboard &rarr;
+                    Go to Dashboard
                   </Button>
                 </Link>
                 <Button
@@ -161,7 +188,7 @@ const Home = () => {
 
       {/* Hero Container with Background Soft Lighting */}
       <div className="relative overflow-hidden">
-        <div className="pointer-events-none absolute -top-24 left-1/2 -z-10 h-[500px] w-[900px] -translate-x-1/2 rounded-full bg-gradient-to-tr from-indigo-200/50 via-purple-100/40 to-blue-100/30 blur-3xl" />
+        <div className="pointer-events-none absolute -top-24 left-1/2 -z-10 h-125 w-225 -translate-x-1/2 rounded-full bg-linear-to-tr from-indigo-200/50 via-purple-100/40 to-blue-100/30 blur-3xl" />
 
         {/* Hero Section */}
         <section className="mx-auto flex max-w-7xl flex-col items-center justify-center px-6 pt-16 pb-20 text-center sm:pt-24 sm:pb-28">
@@ -174,7 +201,7 @@ const Home = () => {
           {/* Heading */}
           <h1 className="max-w-4xl text-4xl font-black tracking-tight text-slate-900 sm:text-6xl lg:text-7xl leading-[1.12]">
             Organize Your Job Search <br className="hidden sm:inline" />
-            <span className="bg-gradient-to-r from-indigo-600 via-violet-600 to-indigo-800 bg-clip-text text-transparent">
+            <span className="bg-linear-to-r from-indigo-600 via-violet-600 to-indigo-800 bg-clip-text text-transparent">
               From Application to Offer
             </span>
           </h1>
@@ -194,7 +221,7 @@ const Home = () => {
                   size="lg"
                   className="w-full sm:w-auto px-8 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold shadow-lg shadow-indigo-600/20"
                 >
-                  Go to Dashboard &rarr;
+                  Go to Dashboard
                 </Button>
               </Link>
             ) : (
@@ -282,27 +309,55 @@ const Home = () => {
 
       {/* CTA Section (Only for logged out users) */}
       {!token && (
-        <section className="relative overflow-hidden bg-indigo-600 py-20 text-white shadow-inner">
-          <div className="pointer-events-none absolute -top-24 -left-24 h-72 w-72 rounded-full bg-white/10 blur-2xl" />
-          <div className="pointer-events-none absolute -bottom-24 -right-24 h-72 w-72 rounded-full bg-indigo-900/30 blur-2xl" />
+        <section className="relative overflow-hidden bg-linear-to-br from-indigo-700 via-indigo-600 to-slate-900 py-20 text-white shadow-2xl">
+          {/* Ambient Glows */}
+          <div className="pointer-events-none absolute -top-32 -left-32 h-96 w-96 rounded-full bg-indigo-400/20 blur-3xl" />
+          <div className="pointer-events-none absolute -bottom-32 -right-32 h-96 w-96 rounded-full bg-violet-600/30 blur-3xl" />
 
-          <div className="relative z-10 mx-auto max-w-3xl px-6 text-center">
-            <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
+          {/* Subtle Grid Pattern Overlay */}
+          <div
+            className="pointer-events-none absolute inset-0 opacity-10"
+            style={{
+              backgroundImage: `radial-gradient(circle at 1px 1px, white 1px, transparent 0)`,
+              backgroundSize: "24px 24px",
+            }}
+          />
+
+          <div className="relative z-10 mx-auto max-w-4xl px-6 text-center">
+            {/* Feature Pills */}
+            <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-indigo-100 backdrop-blur-md ring-1 ring-white/20 mb-6">
+              <Sparkles className="h-3.5 w-3.5 text-amber-300" />
+              <span>100% Free • No Credit Card Required</span>
+            </div>
+
+            <h2 className="text-3xl font-extrabold tracking-tight sm:text-5xl leading-tight">
               Ready to organize your job search?
             </h2>
 
-            <p className="mt-4 text-sm sm:text-base text-indigo-100 max-w-lg mx-auto leading-relaxed">
-              Create your free account and start tracking your applications,
-              status updates, and interview dates today.
+            <p className="mt-4 text-sm sm:text-lg text-indigo-100/90 max-w-xl mx-auto leading-relaxed">
+              Create your free account and start tracking applications,
+              interview dates, and AI insights today.
             </p>
 
-            <div className="mt-8 flex justify-center">
+            {/* Micro Feature Highlights */}
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-xs sm:text-sm text-indigo-200 font-medium">
+              <span className="flex items-center gap-1.5">
+                <ShieldCheck className="h-4 w-4 text-emerald-400" /> Application
+                Board
+              </span>
+              <span className="flex items-center gap-1.5">
+                <Zap className="h-4 w-4 text-amber-300" /> AI Resume Keywords
+              </span>
+            </div>
+
+            <div className="mt-10 flex justify-center">
               <Link to="/register">
                 <Button
                   size="lg"
-                  className="bg-white text-indigo-600 hover:bg-slate-100 font-bold !px-8 shadow-lg shadow-indigo-900/20 border-0"
+                  className="group relative inline-flex items-center gap-2.5 rounded-xl bg-white px-8 py-3.5 text-sm sm:text-base font-bold text-indigo-900 shadow-xl transition-all duration-200 hover:bg-indigo-50 hover:shadow-2xl hover:-translate-y-0.5 active:translate-y-0"
                 >
-                  Create Account Free &rarr;
+                  <span className="text-indigo-600 hover:text-white">Create Account Free</span>
+                  <ArrowRight className="h-4 w-4 text-indigo-600 transition-transform duration-200 group-hover:translate-x-1" />
                 </Button>
               </Link>
             </div>
@@ -311,21 +366,39 @@ const Home = () => {
       )}
 
       {/* Footer */}
-      <footer className="border-t border-slate-200/80 bg-white py-10">
+      <footer className="border-t border-slate-200/80 bg-slate-50/50 py-12">
         <div className="mx-auto max-w-7xl px-6 text-center text-xs text-slate-500">
-          <div className="flex items-center justify-center gap-2 mb-3">
-            <div className="flex h-6 w-6 items-center justify-center rounded-md bg-indigo-600 text-white font-bold text-xs shadow-sm">
-              C
+          {/* Logo & Name */}
+          <div className="flex items-center justify-center gap-2.5 mb-4">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-600 text-white shadow-md shadow-indigo-600/20 ring-1 ring-indigo-500/30">
+              <CareerTrackLogo className="h-5 w-5 text-white" />
             </div>
-            <p className="font-bold text-slate-800 text-sm">CareerTrack Lite</p>
+            <span className="font-extrabold text-slate-900 text-base tracking-tight">
+              CareerTrack{" "}
+              <span className="text-indigo-600 font-semibold">Lite</span>
+            </span>
           </div>
 
-          <p className="max-w-md mx-auto leading-relaxed text-slate-400">
-            Built with React, TypeScript, Express.js, Prisma ORM, PostgreSQL,
-            JWT Authentication, and Tailwind CSS.
-          </p>
+          {/* Tech Stack Badges */}
+          <div className="flex flex-wrap justify-center items-center gap-1.5 max-w-xl mx-auto my-4 text-[11px] font-medium text-slate-600">
+            {[
+              "React",
+              "TypeScript",
+              "Express.js",
+              "Prisma ORM",
+              "PostgreSQL",
+              "Tailwind CSS",
+            ].map((tech) => (
+              <span
+                key={tech}
+                className="rounded-md bg-white border border-slate-200/80 px-2 py-0.5 text-slate-500 shadow-2xs"
+              >
+                {tech}
+              </span>
+            ))}
+          </div>
 
-          <p className="mt-6 text-slate-400">
+          <p className="mt-6 text-slate-400 text-xs">
             © {new Date().getFullYear()} CareerTrack Lite. All rights reserved.
           </p>
         </div>

@@ -1,4 +1,5 @@
 import { Link, NavLink } from "react-router";
+import { CareerTrackLogo } from "../../pages/Home/Home";
 
 interface DashboardSidebarProps {
   sidebarOpen: boolean;
@@ -110,19 +111,7 @@ const DashboardSidebar = ({
           <div className="flex items-center gap-2.5">
             <Link to={"/"} className="flex items-center gap-2.5">
               <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-600 text-white shadow-md shadow-indigo-100">
-                <svg
-                  className="h-5 w-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                  />
-                </svg>
+                <CareerTrackLogo></CareerTrackLogo>
               </div>
               <span className="text-lg font-bold text-slate-800 tracking-tight">
                 CareerTrack{" "}

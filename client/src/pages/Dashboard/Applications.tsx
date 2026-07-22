@@ -11,6 +11,7 @@ import { Button } from "../../components/ui/Button";
 import { ApplicationTable } from "../../components/application/ApplicationTable";
 import { ApplicationCard } from "../../components/application/ApplicationCard";
 import { DeleteDialog } from "../../components/application/DeleteDialog";
+import { showError, showSuccess } from "../../utils/toast";
 
 interface ApiErrorResponse {
   message: string;
@@ -107,6 +108,7 @@ const Applications = () => {
       await ApplicationService.deleteApplication(axiosSecure, id);
       setDeleteModalOpen(false);
       setSelectedAppToDelete(null);
+      showSuccess("Application deleted.");
       await fetchApplications();
     } catch (error) {
       if (error instanceof AxiosError) {
@@ -116,6 +118,7 @@ const Applications = () => {
         );
       } else {
         setApiError("Delete failed. Please try again.");
+        showError("Delete failed. Please try again.");
       }
     } finally {
       setDeletingId(null);

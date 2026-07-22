@@ -4,6 +4,8 @@ import { useForm } from "react-hook-form";
 import { AuthService } from "../../services/auth.service";
 import type { RegisterFormData } from "../../types/auth.types";
 import { AxiosError } from "axios";
+import { showSuccess } from "../../utils/toast";
+import { CareerTrackLogo } from "../Home/Home";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -25,6 +27,7 @@ const Register = () => {
 
       await AuthService.registerUser(data);
       reset();
+      showSuccess("Account created successfully.");
       navigate("/login");
     } catch (error: unknown) {
       console.error(error);
@@ -47,19 +50,7 @@ const Register = () => {
       <div className="hidden w-1/2 flex-col justify-between bg-linear-to-br from-indigo-600 via-indigo-700 to-blue-800 p-12 text-white lg:flex">
         <Link to={"/"} className="flex items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 backdrop-blur-md border border-white/20 shadow-sm">
-            <svg
-              className="h-6 w-6 text-white"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-              />
-            </svg>
+            <CareerTrackLogo></CareerTrackLogo>
           </div>
           <span className="text-xl font-bold tracking-tight">
             CareerTrack <span className="text-sm text-indigo-200">Lite</span>

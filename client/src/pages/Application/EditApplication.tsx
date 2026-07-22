@@ -7,6 +7,7 @@ import { ApplicationService } from "../../services/application.service";
 import ApplicationForm from "../../components/application/ApplicationForm";
 
 import type { CreateApplicationPayload } from "../../types/application.types";
+import { showSuccess } from "../../utils/toast";
 
 interface ApiErrorResponse {
   message: string;
@@ -77,6 +78,7 @@ const EditApplication = () => {
       setApiError("");
 
       await ApplicationService.updateApplication(axiosSecure, id, data);
+      showSuccess("Application updated successfully.");
       navigate("/applications");
     } catch (error) {
       if (error instanceof AxiosError) {
